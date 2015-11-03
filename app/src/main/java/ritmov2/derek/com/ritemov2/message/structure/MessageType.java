@@ -4,9 +4,11 @@ package ritmov2.derek.com.ritemov2.message.structure;
  * Created by Derek.P.Dai on 2015/11/3.
  */
 public enum MessageType {
+    //reserve type for no match
+    NO_MATCH(ServerType.NONE, Colunm.NONE, Direction.NONE),
 
-    LOGIN_REQUEST(ServerType.LoginServer, Colunm.COLUNM_0, Direction.CLIENT_TO_SERVER),
-    LOGIN_RESPONSE(ServerType.LoginServer, Colunm.COLUNM_1, Direction.SERVER_TO_CLIENT);
+    LOGIN_REQUEST(ServerType.LoginServer, Colunm.COLUNM_1, Direction.CLIENT_TO_SERVER),
+    LOGIN_RESPONSE(ServerType.LoginServer, Colunm.COLUNM_2, Direction.SERVER_TO_CLIENT);
 
     private ServerType serverType;
     private Colunm colunm;
@@ -19,7 +21,7 @@ public enum MessageType {
         this.dir = dir;
     }
 
-    public int getIntValue(){
+    public int getIntValue() {
         int value = 0;
 
         //value is divided into four section.
@@ -30,15 +32,23 @@ public enum MessageType {
         return value;
     }
 
-/*    public MessageType parseFromInt (int src){
+    public class MessageTypeMismatchException extends Exception {
+        public MessageTypeMismatchException(String detailMessage) {
+            super(detailMessage);
+        }
+    }
 
-        int servertypeInt = src & 0xFF000000;
-        int colunmInt     = src & 0x00FFFF00;
-        int dirInt        = src & 0x000000FF;
+    public static MessageType parseFromInt(int src) throws MessageTypeMismatchException {
 
-        MessageType messageType = new MessageType();
+        for (MessageType type : MessageType.values()) {
+            if (type.getIntValue() == src) {
+                return type;
+            }
+        }
 
-    }*/
+        return NO_MATCH;
+
+    }
 }
 
 

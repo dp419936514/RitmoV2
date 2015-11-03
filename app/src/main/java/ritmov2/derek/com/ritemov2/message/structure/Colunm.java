@@ -5,7 +5,7 @@ package ritmov2.derek.com.ritemov2.message.structure;
  */
 public enum Colunm {
 
-    COLUNM_0(0),
+    NONE(0),
     COLUNM_1(1),
     COLUNM_2(2);
 

@@ -37,9 +37,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import ritmov2.derek.com.ritemov2.message.LoginRequest;
+import ritmov2.derek.com.ritemov2.message.pojos.LoginRequest;
 import ritmov2.derek.com.ritemov2.message.ServiceMessage;
 import ritmov2.derek.com.ritemov2.message.structure.MessageType;
 import ritmov2.derek.com.ritemov2.network.NettyClient;
@@ -357,6 +355,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 client.sendMessage(message);
 
                 //获得处理的结果
+
+
 
             } else {
                 System.out.println("Login request cancelled.");
