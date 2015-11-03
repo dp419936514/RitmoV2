@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-=======
+
 .gradle
 /local.properties
 /.idea/workspace.xml
@@ -8,7 +7,6 @@
 /build
 /captures
 
->>>>>>> init repository
 # Built application files
 *.apk
 *.ap_
@@ -35,8 +33,7 @@ local.properties
 proguard/
 
 # Log Files
-<<<<<<< HEAD
+
 *.log
-=======
-*.log
->>>>>>> init repository
+
+
