@@ -2,8 +2,10 @@ package ritmov2.derek.com.ritemov2.network;
 
 import android.util.Log;
 
+import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.concurrent.TimeoutException;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;

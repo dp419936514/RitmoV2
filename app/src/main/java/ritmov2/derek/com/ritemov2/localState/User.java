@@ -8,7 +8,7 @@ public class User {
     private static String pwd = "";
     private static LoginState loginState = LoginState.LOGOUT;
 
-    private enum LoginState {
+    public enum LoginState {
         LOGON, LOGOUT
     }
 
@@ -24,4 +24,13 @@ public class User {
         }
         return user;
     }
+
+    public void LoginSucc() {
+        User.loginState = LoginState.LOGON;
+    }
+
+    public LoginState getLoginState() {
+        return loginState;
+    }
+
 }

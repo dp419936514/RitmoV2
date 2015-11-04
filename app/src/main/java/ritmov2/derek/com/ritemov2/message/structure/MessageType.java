@@ -25,9 +25,9 @@ public enum MessageType {
         int value = 0;
 
         //value is divided into four section.
-        value = value & (this.serverType.getServerType() << 24);
-        value = value & (this.colunm.getColunm() << 8);
-        value = value & this.dir.getDir();
+        value = value | (serverType.getServerType() << 24);
+        value = value | (colunm.getColunm() << 8);
+        value = value | dir.getDir();
 
         return value;
     }

@@ -5,11 +5,13 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,6 +30,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -34,13 +38,21 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
+import ritmov2.derek.com.ritemov2.localState.User;
 import ritmov2.derek.com.ritemov2.message.pojos.LoginRequest;
 import ritmov2.derek.com.ritemov2.message.ServiceMessage;
 import ritmov2.derek.com.ritemov2.message.structure.MessageType;
 import ritmov2.derek.com.ritemov2.network.NettyClient;
+import ritmov2.derek.com.ritemov2.network.asyncTask.LoginTask;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -284,7 +296,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             emails.add(cursor.getString(ProfileQuery.ADDRESS));
             cursor.moveToNext();
         }
-
         addEmailsToAutoComplete(emails);
     }
 
@@ -333,7 +344,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // TODO: attempt authentication against a network service.
             if (!isCancelled()) {
 
-                //
                 ServiceMessage.Message.Builder builder = ServiceMessage.Message.newBuilder();
                 builder.setMessagetype(MessageType.LOGIN_REQUEST.getIntValue());
                 int versionCode = 0 ;
@@ -347,16 +357,28 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 Gson gson = new Gson();
                 String content = gson.toJson(loginRequest);
-
                 builder.setContent(content);
-
                 ServiceMessage.Message message = builder.build();
 
                 client.sendMessage(message);
 
                 //获得处理的结果
+                LoginTask loginTask = new LoginTask();
+                ExecutorService executor = Executors.newCachedThreadPool();
+                Future<Boolean> loginResult = executor.submit(loginTask);
 
+                try{
+                    Log.e(TAG,loginResult.get(30,TimeUnit.SECONDS)+"");
+                    return loginResult.get();
 
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (TimeoutException e) {
+                    Toast.makeText(getApplicationContext(),"Connection to server timeout",Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
 
             } else {
                 System.out.println("Login request cancelled.");
@@ -377,6 +399,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
+                Toast.makeText(getBaseContext(),"Login Success",Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent();
+
+                intent.setClass(getApplicationContext(),Main_fullScreen_Activity.class);
+                startActivity(intent);
+
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -386,6 +415,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected void onCancelled() {
+            Toast.makeText(getBaseContext(),"Login Cancelled",Toast.LENGTH_SHORT).show();
             mAuthTask = null;
             showProgress(false);
         }
