@@ -30,7 +30,7 @@ public class NettyClient implements Runnable {
 
     private Channel ch;
 
-    private SocketAddress serverAddress = new InetSocketAddress("192.168.1.201", 9001);
+    private SocketAddress serverAddress = new InetSocketAddress("52.68.200.13", 9001);
 
     @Override
     public void run() {
