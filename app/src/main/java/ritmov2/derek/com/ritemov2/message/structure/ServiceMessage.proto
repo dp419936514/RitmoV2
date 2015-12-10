@@ -1,9 +1,0 @@
-option optimize_for = SPEED;
-option java_package = "ritmov2.derek.com.ritemov2.message";
-
-package structure;
-
- message Message{
-    required uint32 messagetype = 1;
-    required String content     = 2;
- }

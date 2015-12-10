@@ -1,0 +1,9 @@
+option optimize_for = SPEED;
+option java_package = "com.benq.derek.netty.message";
+
+package structure;
+
+ message Message{
+    required uint32 messagetype = 1;
+    required string content     = 2;
+ }
