@@ -14,7 +14,6 @@ public class LoginTask implements Callable<Boolean> {
     public Boolean call() throws Exception {
 
         User user = User.getInstance();
-
         while(User.LoginState.LOGOUT == user.getLoginState()){
             Thread.sleep(500);
         }

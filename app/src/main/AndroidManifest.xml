@@ -11,20 +11,18 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".LoginActivity"
+            android:name="ritemov2.LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".Main_fullScreen_Activity"
+            android:name="ritemov2.Main_fullScreen_Activity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_main_full_screen_"
             android:theme="@style/FullscreenTheme" >

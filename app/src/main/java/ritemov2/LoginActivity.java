@@ -31,7 +31,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
+import ritemov2.commonModule.msg.CSGOV2Message;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -46,7 +46,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import ritemov2.message.ServiceMessage;
-import ritemov2.message.pojos.LoginRequest;
+import ritemov2.message.LoginMessage;
 import ritemov2.message.structure.MessageType;
 import ritemov2.network.NettyClient;
 import ritemov2.network.asyncTask.LoginTask;
@@ -344,20 +344,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 ServiceMessage.Message.Builder builder = ServiceMessage.Message.newBuilder();
                 builder.setMessagetype(MessageType.LOGIN_REQUEST.getIntValue());
-                int versionCode = 0 ;
                 try {
                     PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_CONFIGURATIONS);
-                    versionCode = info.versionCode;
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
-                LoginRequest loginRequest = new LoginRequest(mEmail,mPassword,versionCode, LoginRequest.LoginType.SIGNUP);
-
-                Gson gson = new Gson();
-                String content = gson.toJson(loginRequest);
-                builder.setContent(content);
-                ServiceMessage.Message message = builder.build();
-
+                CSGOV2Message message  = LoginMessage.Login_REQ(mEmail,mPassword);
                 client.sendMessage(message);
 
                 //获得处理的结果
@@ -368,7 +360,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 try{
                     Log.e(TAG,loginResult.get(30,TimeUnit.SECONDS)+"");
                     return loginResult.get();
-
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {

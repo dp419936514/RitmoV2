@@ -34,4 +34,8 @@ public class LoginRequest implements Serializable{
                 ", loginType=" + loginType +
                 '}';
     }
+
+
+
+
 }

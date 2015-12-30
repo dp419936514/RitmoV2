@@ -7,7 +7,7 @@ public enum ServerType {
     LoginServer(1);
 
     private int serverType;
-    private ServerType(int serverType){this.serverType = serverType;}
+    ServerType(int serverType){this.serverType = serverType;}
 
     public int getServerType() {
         return serverType;

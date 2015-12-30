@@ -91,7 +91,7 @@ public class Main_fullScreen_Activity extends AppCompatActivity {
         if (mVisible) {
             hide();
         } else {
-            show();
+        //  show();
         }
     }
 
