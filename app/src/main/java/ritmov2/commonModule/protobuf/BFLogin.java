@@ -7496,7 +7496,7 @@ public final class BFLogin {
       "LoginClientDisconnectReq\"\032\n\030LoginClientD" +
       "isconnectRsp\"P\n\026LoginUserInfoUploadReq\022\017" +
       "\n\007steamid\030\001 \002(\005\022\020\n\010QQNumber\030\002 \003(\t\022\023\n\013mac",
-      "hineInfo\030\003 \002(\tB!\n\037com.benq.csgov2.common" +
+      "hineInfo\030\003 \002(\tB!\n\037com.benq.csgov2.com.benq.csgov2.common" +
       ".protobuf"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =

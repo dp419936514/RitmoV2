@@ -2802,7 +2802,7 @@ public final class BFGame {
       "d\030\001 \002(\005\022\014\n\004type\030\002 \002(\005\"!\n\016GameOverNotify\022" +
       "\017\n\007matchid\030\001 \002(\005\"7\n\021GameScreenShotReq\022\017\n" +
       "\007steamid\030\001 \002(\005\022\021\n\ttargetint\030\002 \002(\005B!\n\037com" +
-      ".benq.csgov2.common.protobuf"
+      ".benq.csgov2.com.benq.csgov2.common.protobuf"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

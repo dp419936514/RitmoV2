@@ -1,5 +1,7 @@
 package ritmov2.network;
 
+import android.util.Log;
+
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
@@ -47,9 +49,11 @@ public class NettyClient implements Runnable {
 
     public ChannelFuture sendMessage(CSGOV2Message message ) {
         if (message == null) {
+            Log.e(TAG,"Message to sent is null");
             return null;
         }
         if (this.ch == null){
+            Log.e(TAG,"Channel is not established yet.");
             return null;
         }
        return this.ch.writeAndFlush(message);

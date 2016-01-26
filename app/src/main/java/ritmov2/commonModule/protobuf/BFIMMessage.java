@@ -2927,7 +2927,7 @@ public final class BFIMMessage {
       " \002(\005\022\013\n\003msg\030\003 \002(\t\"-\n\016PeerToPeerRecv\022\016\n\006s" +
       "ender\030\001 \002(\005\022\013\n\003msg\030\002 \002(\t\"=\n\016PeerToPeerSe" +
       "nd\022\016\n\006sender\030\001 \002(\005\022\016\n\006recver\030\002 \002(\005\022\013\n\003ms" +
-      "g\030\003 \002(\tB!\n\037com.benq.csgov2.common.protob",
+      "g\030\003 \002(\tB!\n\037com.benq.csgov2.com.benq.csgov2.common.protob",
       "uf"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =

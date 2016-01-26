@@ -1,7 +1,7 @@
 package ritmov2.network.asyncTask;
 import java.util.concurrent.Callable;
 
-import ritmov2.localState.User;
+import ritmov2.localstate.User;
 
 
 /**
@@ -13,10 +13,10 @@ public class LoginTask implements Callable<Boolean> {
     @Override
     public Boolean call() throws Exception {
 
-        User user = User.getInstance();
+      /*  User user = User.getInstance();
         while(User.LoginState.LOGOUT == user.getLoginState()){
             Thread.sleep(500);
-        }
+        }*/
         return true;
     }
 }

@@ -44,9 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ritmov2.commonModule.msg.CSGOV2Message;
-import ritmov2.message.LoginMessage;
-import ritmov2.message.ServiceMessage;
-import ritmov2.message.structure.MessageType;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -95,7 +92,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     };
 
     private void sendMessage(int CommandValue, CSGOV2Message message) {
-        Message msg = Message.obtain(null, CommandValue, message);//MessengerService.TEST=0
+        Message msg = Message.obtain(null, CommandValue, message);
         msg.replyTo = mMessenger;
         try {
             rMessenger.send(msg);
@@ -201,7 +198,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         }
     }
-
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -374,17 +370,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // TODO: attempt authentication against a network service.
             if (!isCancelled()) {
 
-                ServiceMessage.Message.Builder builder = ServiceMessage.Message.newBuilder();
-                builder.setMessagetype(MessageType.LOGIN_REQUEST.getIntValue());
-                try {
-                    PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_CONFIGURATIONS);
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
-                CSGOV2Message message = LoginMessage.Login_REQ(mEmail, mPassword);
-
-
                 // TODO: register the new account here.
+
             }
             return false;
         }

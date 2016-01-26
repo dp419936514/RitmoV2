@@ -11077,7 +11077,7 @@ public final class BFMatch {
       "F.BaseDefine.MapInfo\"!\n\022MatchMessageNoti",
       "fy\022\013\n\003msg\030\001 \002(\t\"C\n\rBanUserNotify\022\017\n\007stea" +
       "mid\030\001 \002(\005\022\020\n\010nickname\030\002 \002(\t\022\017\n\007bantime\030\003" +
-      " \002(\005B!\n\037com.benq.csgov2.common.protobuf"
+      " \002(\005B!\n\037com.benq.csgov2.com.benq.csgov2.common.protobuf"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

@@ -5360,7 +5360,7 @@ public final class BFFunList {
       "sp\022\'\n\007svrlist\030\001 \003(\0132\026.BF.FunList.ServerL",
       "ist\"\022\n\020GetServerListReq\"A\n\020GetServerList" +
       "Rsp\022-\n\nserverinfo\030\001 \003(\0132\031.BF.BaseDefine." +
-      "ServerInfoB!\n\037com.benq.csgov2.common.pro" +
+      "ServerInfoB!\n\037com.benq.csgov2.com.benq.csgov2.common.pro" +
       "tobuf"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =

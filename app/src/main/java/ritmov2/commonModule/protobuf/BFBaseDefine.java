@@ -16545,7 +16545,7 @@ public final class BFBaseDefine {
       "EENDTYPE_USERTERMINATE\020\002*M\n\017UserInRoomSt" +
       "ate\022\n\n\006ONLINE\020\000\022\016\n\nINMATCHING\020\001\022\r\n\tMATCH" +
       "DONE\020\002\022\017\n\013INPREPARING\020\003B!\n\037com.benq.csgo" +
-      "v2.common.protobuf"
+      "v2.com.benq.csgov2.common.protobuf"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

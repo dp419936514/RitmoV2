@@ -13178,7 +13178,7 @@ public final class BFFriend {
       "(\t\022\020\n\010allQQNum\030\005 \003(\t\022\020\n\010b5vernum\030\006 \002(\005\022\021" +
       "\n\tsysvernum\030\007 \002(\005*B\n\nFriendType\022\021\n\rFT_FR" +
       "IENDSHIP\020\000\022\020\n\014FT_BLACKLIST\020\001\022\017\n\013FT_STRAN" +
-      "GER\020\002B!\n\037com.benq.csgov2.common.protobuf"
+      "GER\020\002B!\n\037com.benq.csgov2.com.benq.csgov2.common.protobuf"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

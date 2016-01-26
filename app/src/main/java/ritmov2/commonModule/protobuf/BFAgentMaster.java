@@ -2468,7 +2468,7 @@ public final class BFAgentMaster {
       "q\022/\n\014AppVerStruct\030\001 \002(\0132\031.BF.AgentMaster" +
       ".VerStruct\022\017\n\007reserve\030\002 \002(\t\":\n\017AgentAskW" +
       "orkRsp\022\r\n\005state\030\001 \002(\005\022\n\n\002ip\030\002 \002(\t\022\014\n\004por" +
-      "t\030\003 \002(\005B!\n\037com.benq.csgov2.common.protob" +
+      "t\030\003 \002(\005B!\n\037com.benq.csgov2.com.benq.csgov2.common.protob" +
       "uf"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
