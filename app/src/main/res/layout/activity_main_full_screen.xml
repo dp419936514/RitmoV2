@@ -1,6 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:background="@android:color/holo_blue_dark"
+    android:layout_height="match_parent" android:background="@drawable/bg_main"
     tools:context="ritmov2.derek.com.ritmov2.activity.Main_fullScreen_Activity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
@@ -8,8 +8,7 @@
          TextureView, etc. -->
     <TextView android:id="@+id/fullscreen_content" android:layout_width="match_parent"
         android:layout_height="match_parent" android:keepScreenOn="true" android:textColor="#33b5e5"
-        android:textStyle="bold" android:textSize="50sp" android:gravity="center"
-        android:text="@string/dummy_content" />
+        android:textStyle="bold" android:textSize="50sp" android:gravity="center"/>
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
