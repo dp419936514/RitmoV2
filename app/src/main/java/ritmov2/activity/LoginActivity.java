@@ -1,4 +1,4 @@
-package ritmov2;
+package ritmov2.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -13,7 +13,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +23,7 @@ import android.os.RemoteException;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -38,12 +38,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
+import com.google.protobuf.InvalidProtocolBufferException;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import ritmov2.R;
+import ritmov2.commonModule.command.Commands;
 import ritmov2.commonModule.msg.CSGOV2Message;
+import ritmov2.commonModule.protobuf.BFBaseDefine;
+import ritmov2.commonModule.protobuf.BFLogin;
+import ritmov2.config.MessageDirection;
+import ritmov2.localstate.User;
+import ritmov2.service.NettyService;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -56,11 +63,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
-
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-    private UserLoginTask mAuthTask = null;
 
     private static final String TAG = "LoginActivity";
 
@@ -81,19 +83,25 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             Log.i(TAG, "onServiceDisconnected()...");
             rMessenger = null;
         }
-
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             Log.i(TAG, "onServiceConnected()...");
             rMessenger = new Messenger(service);//get the object of remote service
             mMessenger = new Messenger(mHandler);//initial the object of local service
-
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        unbindService(serConn);
+        super.onDestroy();
+    }
 
     private void sendMessage(int CommandValue, CSGOV2Message message) {
         Message msg = Message.obtain(null, CommandValue, message);
         msg.replyTo = mMessenger;
+        msg.arg1 = MessageDirection.ACTIVITY_TO_SERVICE.getIntValue();
+        msg.arg2 = Commands.valueToCommand(message.getCmdId()).getCmdType().getValue();
         try {
             rMessenger.send(msg);
         } catch (RemoteException e) {
@@ -104,15 +112,50 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+                if (msg.what !=  Commands.LOGIN_RSP.getCmdValue()){
+                    return;
+                }
+                CSGOV2Message message = (CSGOV2Message)msg.obj;
+                    if (message.getCmdId() == Commands.LOGIN_RSP.getCmdValue()){
+                        User user = User.getInstance();
+                        byte[] buf = message.getProbuf();
+                        try {
+                            BFLogin.LoginRes loginRsp = BFLogin.LoginRes.parseFrom(buf);
+                            int result = loginRsp.getResult();
+                            String Rsp = loginRsp.getMsg();
+                            BFBaseDefine.BaseUserInfo userInfo = loginRsp.getUserinfo();
+                            if (0 == result) {
+                                Log.i(TAG,"Login Success:" + Rsp);
+                                user.setName(userInfo.getNickName());
+                                user.setElo(userInfo.getElo());
+                                user.setPepoint(userInfo.getPepoint());
+                                user.setSteamId(userInfo.getSteamid());
+                                user.setUserLevel(userInfo.getUserlevel());
+                                user.setHeadIMG(userInfo.getHeadimg());
+                                user.setLoginOn(true);
+
+                                showProgress(false);
+                                startActivity(new Intent(LoginActivity.this,Main_fullScreen_Activity.class));
+                            } else {
+                                LoginActivity.this.showProgress(false);
+                                Log.e(TAG, "Login Failed:" + Rsp);
+
+                                mPasswordView.setError(Rsp);
+                                Toast.makeText(getApplicationContext(),"Login Failed : " +Rsp,Toast.LENGTH_LONG).show();
+                            }
+                        } catch (InvalidProtocolBufferException e) {
+                            e.printStackTrace();
+                        } catch (Exception e){
+                            Log.e(TAG,e.toString());
+                        }
+                        finally {
+                            Log.i(TAG,user.toString());
+                        }
+            }
             super.handleMessage(msg);
         }
     };
 
-    private void doBindService(Intent intent) {
-        Log.i(TAG, "doBindService()...");
-        boolean mIsBind = bindService(intent, serConn, BIND_AUTO_CREATE);//if bind success return true
-        Log.e(TAG, "Is bind: " + mIsBind);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,7 +196,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             e.printStackTrace();
         }
         versionCode = pi.versionCode;
+        doBindService(new Intent(LoginActivity.this, NettyService.class));
 
+        hide();
     }
 
     private void populateAutoComplete() {
@@ -205,9 +250,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
 
         // Reset errors.
         mEmailView.setError(null);
@@ -232,7 +274,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
+        } else if (!isUsernameValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
@@ -246,14 +288,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            executeLogin(email,password);
         }
     }
 
-    private boolean isEmailValid(String email) {
+    private boolean isUsernameValid(String email) {
         // Replace this with your own logic
-        return email.contains("@");
+        return true;
     }
 
     private boolean isPasswordValid(String password) {
@@ -340,7 +381,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int IS_PRIMARY = 1;
     }
 
-
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
@@ -350,63 +390,33 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView.setAdapter(adapter);
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    protected void executeLogin(final String mEmail, String mPassword) {
+        // TODO: attempt authentication against a network service.
+            // TODO: register the new account here.
+            BFLogin.LoginReq.Builder builder = BFLogin.LoginReq.newBuilder();
+            builder.setAccount(mEmail);
+            builder.setPassword(mPassword);
+            CSGOV2Message loginRequest = new CSGOV2Message(Commands.LOGIN_REQ.getCmdValue(), builder.build().toByteArray());
+            sendMessage(Commands.LOGIN_REQ.getCmdValue(), loginRequest);
+    }
+    private void doBindService(Intent intent) {
+        Log.i(TAG, "doBindService()...");
+        boolean mIsBind = bindService(intent, serConn, BIND_ADJUST_WITH_ACTIVITY);//if bind success return true
+        Log.e(TAG, "Is bind: " + mIsBind);
+    }
 
-        private final SocketAddress serverAddress = new InetSocketAddress("192.168.1.201", 9001);
-        private final String mEmail;
-        private final String mPassword;
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
+    private void hide() {
+        // Hide UI first
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
         }
+       /* mControlsView.setVisibility(View.GONE);
+        mVisible = false;
 
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-            if (!isCancelled()) {
-
-                // TODO: register the new account here.
-
-            }
-            return false;
-        }
-
-        private Boolean checkResult(String s) {
-            //TODO check the login result
-            return false;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                Toast.makeText(getBaseContext(), "Login Success", Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent();
-
-                intent.setClass(getApplicationContext(), Main_fullScreen_Activity.class);
-                startActivity(intent);
-
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            Toast.makeText(getBaseContext(), "Login Cancelled", Toast.LENGTH_SHORT).show();
-            mAuthTask = null;
-            showProgress(false);
-        }
+        // Schedule a runnable to remove the status and navigation bar after a delay
+        mHideHandler.removeCallbacks(mShowPart2Runnable);
+        mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);*/
     }
 }
 

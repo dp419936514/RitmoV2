@@ -1,5 +1,6 @@
 package ritmov2.network;
 
+import android.os.Messenger;
 import android.util.Log;
 
 import java.net.InetSocketAddress;
@@ -23,6 +24,11 @@ public class NettyClient implements Runnable {
     private static final String TAG = "NettyClient";
 
     private Channel ch;
+    private Messenger messenger;
+
+    public NettyClient(Messenger messenger) {
+        this.messenger = messenger;
+    }
 
     private SocketAddress serverAddress = new InetSocketAddress(ConfigurationSource.SERVER_IP, ConfigurationSource.SERVER_PORT);
 
@@ -30,7 +36,7 @@ public class NettyClient implements Runnable {
     public void run() {
         EventLoopGroup group = new NioEventLoopGroup();
         Bootstrap bootstrap = new Bootstrap();
-        NettyServerInitializer nettyServerInitializer = new NettyServerInitializer();
+        NettyServerInitializer nettyServerInitializer = new NettyServerInitializer(messenger);
         bootstrap.group(group)
                 .channel(NioSocketChannel.class)
                 .option(ChannelOption.TCP_NODELAY, true)
@@ -44,6 +50,8 @@ public class NettyClient implements Runnable {
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -52,10 +60,10 @@ public class NettyClient implements Runnable {
             Log.e(TAG,"Message to sent is null");
             return null;
         }
-        if (this.ch == null){
+        if (ch == null){
             Log.e(TAG,"Channel is not established yet.");
             return null;
         }
-       return this.ch.writeAndFlush(message);
+       return ch.writeAndFlush(message);
     }
 }

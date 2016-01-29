@@ -18,7 +18,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<CSGOV2Messag
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        //LOG.debug("client channelActive:" + ctx.channel().remoteAddress().toString()+" No : "+ ++i);
+        Log.e(TAG, "client channelActive:" + ctx.channel().remoteAddress().toString());
         super.channelActive(ctx);
     }
 
@@ -36,11 +36,10 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<CSGOV2Messag
             }
         }
     }
-
     @Override
     protected void messageReceived(ChannelHandlerContext ctx, CSGOV2Message msg) throws Exception {
-
-        Log.i(TAG , "receive message from server " + msg.toString());
-
+        Log.i(TAG, "No Handler accept this message " + msg.toString());
+        //TODO Implement your code here
+        ctx.fireChannelRead(msg);
     }
 }

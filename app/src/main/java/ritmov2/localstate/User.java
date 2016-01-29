@@ -16,6 +16,15 @@ public class User {
     int pepoint;
     int userLevel;
 
+    private User() {
+    }
+    private static User mUser;
+    public static User getInstance(){
+        if (mUser == null){
+            mUser = new User();
+        }
+        return mUser;
+    }
 
     public List<BFBaseDefine.MapInfo> getMapInfoList() {
         return MapInfoList;
@@ -32,7 +41,7 @@ public class User {
     }
 
     public void setRoomID(String roomID) {
-        this.roomID = roomID;
+        mUser.roomID = roomID;
     }
 
     public int getRoomNumber() {
@@ -40,7 +49,7 @@ public class User {
     }
 
     public void setRoomNumber(int roomNumber) {
-        this.roomNumber = roomNumber;
+        mUser.roomNumber = roomNumber;
     }
 
     String roomID;
@@ -51,7 +60,7 @@ public class User {
     }
 
     public void setHeadIMG(String headIMG) {
-        this.headIMG = headIMG;
+        mUser.headIMG = headIMG;
     }
 
     String headIMG;
@@ -65,14 +74,11 @@ public class User {
     private ArrayList<Friend> friendList = new ArrayList<>();
 
     public boolean isLoginOn() {
-        if (!this.isLoginOn()) {
-            System.err.println("No user has logged on, Please Log in first.");
-        }
-        return isLoginOn;
+        return this.isLoginOn;
     }
 
     public void setLoginOn(boolean isLoginOn) {
-        this.isLoginOn = isLoginOn;
+        mUser.isLoginOn = isLoginOn;
     }
 
 
@@ -81,7 +87,7 @@ public class User {
     }
 
     public void setFriendList(ArrayList<Friend> frindList) {
-        this.friendList = frindList;
+        mUser.friendList = frindList;
     }
 
     public String getName() {
@@ -89,7 +95,7 @@ public class User {
     }
 
     public void setName(String name) {
-        this.name = name;
+        mUser.name = name;
     }
 
     public String getPwd() {
@@ -97,7 +103,7 @@ public class User {
     }
 
     public void setPwd(String pwd) {
-        this.pwd = pwd;
+        mUser.pwd = pwd;
     }
 
     public double getElo() {
@@ -105,7 +111,7 @@ public class User {
     }
 
     public void setElo(double elo) {
-        this.elo = elo;
+        mUser.elo = elo;
     }
 
     public int getPepoint() {
@@ -113,7 +119,7 @@ public class User {
     }
 
     public void setPepoint(int pepoint) {
-        this.pepoint = pepoint;
+        mUser.pepoint = pepoint;
     }
 
     public int getUserLevel() {
@@ -121,7 +127,7 @@ public class User {
     }
 
     public void setUserLevel(int userLevel) {
-        this.userLevel = userLevel;
+        mUser.userLevel = userLevel;
     }
 
     public int getSteamId() {
@@ -129,7 +135,7 @@ public class User {
     }
 
     public void setSteamId(int steamId) {
-        this.steamId = steamId;
+        mUser.steamId = steamId;
     }
 
     public BFBaseDefine.GameState getUserState() {
@@ -137,7 +143,7 @@ public class User {
     }
 
     public void setUserState(BFBaseDefine.GameState userState) {
-        this.userState = userState;
+        mUser.userState = userState;
     }
 
     public BFBaseDefine.UserInRoomState getInRoomState() {
@@ -145,7 +151,7 @@ public class User {
     }
 
     public void setInRoomState(BFBaseDefine.UserInRoomState inRoomState) {
-        this.inRoomState = inRoomState;
+        mUser.inRoomState = inRoomState;
     }
 
 
@@ -154,18 +160,18 @@ public class User {
     }
 
     public void setmRoomState(BFBaseDefine.MatchRoomState mRoomState) {
-        this.mRoomState = mRoomState;
+        mUser.mRoomState = mRoomState;
     }
 
     @Override
     public String toString() {
         return " User state          \n\n"
-                + " name      : \t" + this.name + "\n"
-                + " steamId   : \t" + this.steamId + "\n"
-                + " elo       : \t" + this.elo + "\n"
-                + " pepoint   : \t" + this.pepoint + "\n"
-                + " roomID    : \t" + this.roomID + "\n"
-                + " userLevel : \t" + this.userLevel + "\n";
+                + " name      : \t" + mUser.name + "\n"
+                + " steamId   : \t" + mUser.steamId + "\n"
+                + " elo       : \t" + mUser.elo + "\n"
+                + " pepoint   : \t" + mUser.pepoint + "\n"
+                + " roomID    : \t" + mUser.roomID + "\n"
+                + " userLevel : \t" + mUser.userLevel + "\n";
     }
 
     public boolean addFriend(BFFriend.FriendInfo friendInfo) {
@@ -174,7 +180,7 @@ public class User {
         if (friendList.contains(newFriend)) {
             return false;
         } else {
-            this.friendList.add(newFriend);
+            mUser.friendList.add(newFriend);
             return true;
         }
     }

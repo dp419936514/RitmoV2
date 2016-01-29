@@ -1,5 +1,7 @@
 package ritmov2.commonModule.netty;
 
+import android.util.Log;
+
 import ritmov2.commonModule.msg.CSGOV2Message;
 import ritmov2.commonModule.util.AesEncTool;
 import io.netty.buffer.ByteBuf;
@@ -11,6 +13,8 @@ import javax.crypto.BadPaddingException;
 import java.nio.ByteOrder;
 
 public class CSGOV2_Client_Agent_Encrypted_Decoder extends LengthFieldBasedFrameDecoder {
+
+    private static final String TAG = "Decoder";
 
     public static final AttributeKey<byte[]> KEY = AttributeKey.valueOf("KEY");
 
@@ -32,15 +36,14 @@ public class CSGOV2_Client_Agent_Encrypted_Decoder extends LengthFieldBasedFrame
         System.err.println("receive something");
         ByteBuf frame = (ByteBuf) super.decode(ctx, in);
         if (frame == null) {
+            Log.e(TAG,"frame is null");
             return null;
         }
-
         if (KEY != null) {
             int cmd = frame.readInt();
             byte[] cipherText = new byte[frame.readableBytes()];
             frame.readBytes(cipherText);
             byte[] msgBody = AesEncTool.aesDecrypt(cipherText, ctx.channel().attr(KEY).get());
-
 //
 //            //显示msg
 //            StringBuffer sBuffer = new StringBuffer("");
@@ -59,6 +62,7 @@ public class CSGOV2_Client_Agent_Encrypted_Decoder extends LengthFieldBasedFrame
             CSGOV2Message msgVO = new CSGOV2Message(cmd, msgBody);
             return msgVO;
         } else {
+            Log.e(TAG,"Cypher key is not ready. Can not send message");
             return null;
         }
     }
@@ -85,7 +89,6 @@ public class CSGOV2_Client_Agent_Encrypted_Decoder extends LengthFieldBasedFrame
         if (cause instanceof BadPaddingException) {
 
         }
-
         super.exceptionCaught(ctx, cause);
     }
 }

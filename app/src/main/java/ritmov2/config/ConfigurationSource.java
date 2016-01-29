@@ -5,7 +5,7 @@ package ritmov2.config;
  */
 public class ConfigurationSource {
     // Server Address
-    public static String SERVER_IP = "192.168.1.201";
+    public static String SERVER_IP = "120.24.218.184";
     public static int SERVER_PORT = 9199;
 
     //Local Client
